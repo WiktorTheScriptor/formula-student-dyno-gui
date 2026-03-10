@@ -2,6 +2,7 @@ import tkinter as tk
 
 # TODO: reorder parameters in alphabetical order and split long lines
 # TODO: add dynamic font resizing based on window resize
+# TODO: add validation to input entries for int or float
 # may be issue with empty frames being wrong size compared to the set weights
 # adjust sizes of elements and how they resize, and padding (maybe change sticky vs set size) (once all elements done)
 # maybe add a default font + settings
@@ -39,17 +40,24 @@ class RemoteGUI(tk.Tk):
         self.rightFrame = tk.Frame(self.mainFrame, bg=self.LIGHT_BACKGROUND, relief='solid', bd=2)
 
         # torque controls in left frame:
+        self.torqueEntryText = tk.StringVar()
+        self.targetTorqueText = tk.StringVar()
+        self.actualTorqueText = tk.StringVar()
+
         self.leftFrameLabel = tk.Label(self.leftFrame, text="Control Panel", font=("Arial", 30, "bold"), bg=self.LIGHT_BACKGROUND)
         self.stepLabel = tk.Label(self.leftFrame, text="Step:", font=("Arial", 18, "bold"), bg=self.LIGHT_BACKGROUND, anchor='s')
         self.stepEntry = tk.Entry(self.leftFrame, bg="#FFFFFF", justify="center", font=("Arial", 20))
         self.stepUpButton = tk.Button(self.leftFrame, text="step up", font=("Arial", 18), bg=self.DARK_BACKGROUND, activebackground=self.MID_BACKGROUND)
-        self.TorqueEntry = tk.Entry(self.leftFrame, bg="#FFFFFF", justify="center", font=("Arial", 20))
+        self.TorqueEntry = tk.Entry(self.leftFrame, textvariable=self.torqueEntryText, bg="#FFFFFF", justify="center", font=("Arial", 20))
         self.stepDownButton = tk.Button(self.leftFrame, text="step down", font=("Arial", 18), bg=self.DARK_BACKGROUND, activebackground=self.MID_BACKGROUND)
         self.sendButton = tk.Button(self.leftFrame, text="send", font=("Arial", 20, "bold"), bg=self.DARK_BACKGROUND, activebackground=self.MID_BACKGROUND)
 
         # dyno info in right frame:
         self.rightFrameLabel = tk.Label(self.rightFrame, text="Monitor Panel", font=("Arial", 30, "bold"), bg=self.LIGHT_BACKGROUND)
-        self.dynoTorque = tk.Entry(self.rightFrame, bg="#FFFFFF", justify="center", font=("Arial", 20))
+        self.targetTorqueLabel = tk.Label(self.rightFrame, text="Target Torque", font=("Arial", 22, "bold"), bg=self.LIGHT_BACKGROUND)
+        self.targetTorque = tk.Entry(self.rightFrame, textvariable=self.targetTorqueText, state="readonly", bg="#FFFFFF", justify="center", font=("Arial", 20))
+        self.actualTorqueLabel = tk.Label(self.rightFrame, text="Actual/Dyno Torque", font=("Arial", 22, "bold"), bg=self.LIGHT_BACKGROUND)
+        self.actualTorque = tk.Entry(self.rightFrame, textvariable=self.actualTorqueText, state="readonly", bg="#FFFFFF", justify="center", font=("Arial", 20))
 
     def setupLayout(self):
         OUTER_PADDING = 10
@@ -86,4 +94,39 @@ class RemoteGUI(tk.Tk):
 
         # temporary rightFrame design:
         self.rightFrameLabel.pack()
-        self.dynoTorque.pack()
+        self.targetTorqueLabel.pack()
+        self.targetTorque.pack()
+        self.actualTorqueLabel.pack()
+        self.actualTorque.pack()
+
+    ###########################
+
+    def run(self):
+        self.mainloop()
+
+    def getTorqueEntry(self):
+        return self.TorqueEntry.get()
+
+    def getStepEntry(self):
+        return self.stepEntry.get()
+
+    def setTorqueEntry(self, value):
+        self.torqueEntryText.set(value)
+
+    def setTargetTorque(self, value):
+        self.targetTorqueText.set(value)
+
+    def setActualTorque(self, value):
+        self.actualTorqueText.set(value)
+
+    def setStopButtonFunction(self, function):
+        self.stopButton.config(command=function)
+
+    def setSendButtonFunction(self, function):
+        self.sendButton.config(command=function)
+
+    def setStepUpButtonFunction(self, function):
+        self.stepUpButton.config(command=function)
+
+    def setStepDownButtonFunction(self, function):
+        self.stepDownButton.config(command=function)
