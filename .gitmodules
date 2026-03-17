@@ -1,0 +1,3 @@
+[submodule "remote-vehicle-control-scripts"]
+	path = remote-vehicle-control-scripts
+	url = https://github.com/sufst/remote-vehicle-control-scripts.git
